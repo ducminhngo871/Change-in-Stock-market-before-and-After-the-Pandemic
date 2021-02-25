@@ -1,2 +1,9 @@
 # DataScienceFinalProject
-This is the final project. 
+
+###This is the final project. 
+
+---
+Authors: 
+- Duc Ngo
+- Franco
+- Vichy
