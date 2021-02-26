@@ -7,3 +7,4 @@ Authors:
 - Duc Ngo
 - Franco
 - Vichy
+- Max
