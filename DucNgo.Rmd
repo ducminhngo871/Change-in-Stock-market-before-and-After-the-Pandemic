@@ -2,5 +2,30 @@
 title: "R Notebook"
 output: html_notebook
 ---
+```{r}
+library(tidyverse)
+```
 
-Hello!
+```{r}
+ACN <- read_csv("/Users/francosalinas/Desktop/COMP_STAT_112/DataScienceFinalProject/ACN.csv")
+ACN
+GE <- read_csv("/Users/francosalinas/Desktop/COMP_STAT_112/DataScienceFinalProject/GE.csv")
+GE
+FIS <- read_csv("/Users/francosalinas/Desktop/COMP_STAT_112/DataScienceFinalProject/FIS.csv")
+FIS
+HON <- read_csv("/Users/francosalinas/Desktop/COMP_STAT_112/DataScienceFinalProject/HON.csv")
+HON
+IBM <- read_csv("/Users/francosalinas/Desktop/COMP_STAT_112/DataScienceFinalProject/IBM.csv")
+IBM
+JNJ <- read_csv("/Users/francosalinas/Desktop/COMP_STAT_112/DataScienceFinalProject/JNJ.csv")
+JNJ
+PFE <- read_csv("/Users/francosalinas/Desktop/COMP_STAT_112/DataScienceFinalProject/PFE.csv")
+PFE
+MMM <- read_csv("/Users/francosalinas/Desktop/COMP_STAT_112/DataScienceFinalProject/MMM.csv")
+MMM
+MRK <- read_csv("/Users/francosalinas/Desktop/COMP_STAT_112/DataScienceFinalProject/MRK.csv")
+MRK
+
+
+```
+
