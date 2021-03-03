@@ -3,27 +3,168 @@ title: "R Notebook"
 output: html_notebook
 ---
 ```{r}
-library(tidyverse)
+library(tidyverse)     # for data cleaning and plotting
+library(lubridate)     # for date manipulation
+library(openintro)     # for the abbr2state() function
+library(gplots)        # for col2hex() function
+library(RColorBrewer)  # for color palettes
+library(ggthemes)      # for more themes (including theme_map())
+library(plotly)        # for the ggplotly() - basic interactivity
+library(gganimate)     # for adding animation layers to ggplots
+library(transformr)    # for "tweening" (gganimate)
+library(gifski)        # need the library for creating gifs but don't need to load each time
+library(shiny)         # for creating interactive apps
+library(lubridate)     # for date manipulation
+library(ggthemes)      # for even more plotting themes
+library(janitor)  
+theme_set(theme_minimal())
 ```
 
 ```{r}
 
 
 AAPL <- read_csv("/Users/francosalinas/Desktop/COMP_STAT_112/DataScienceFinalProject/AAPL.csv")
-AAPL %>% 
+AAPL <- AAPL%>% 
   select(-Open, -High, -Low, -`Adj Close`) %>% 
   mutate(Sector = "Technology",
          Company = "AAPL")
-JNJ <- read_csv("/Users/francosalinas/Desktop/COMP_STAT_112/DataScienceFinalProject/JNJ.csv")
-JNJ %>% 
+HON <- read_csv("/Users/francosalinas/Desktop/COMP_STAT_112/DataScienceFinalProject/HON.csv")
+HON <- HON %>% 
   select(-Open, -High, -Low, -`Adj Close`) %>% 
-  mutate(Sector = "Health",
-         Company = "JNJ")
+  mutate(Sector = "Industrials",
+         Company = "HON")
+UNP <- read_csv("/Users/francosalinas/Desktop/COMP_STAT_112/DataScienceFinalProject/UNP.csv")
+UNP <- UNP %>% 
+  select(-Open, -High, -Low, -`Adj Close`) %>% 
+  mutate(Sector = "Industrials",
+         Company = "UNP")
+UPS <- read_csv("/Users/francosalinas/Desktop/COMP_STAT_112/DataScienceFinalProject/UPS.csv")
+UPS <- UPS %>% 
+  select(-Open, -High, -Low, -`Adj Close`) %>% 
+  mutate(Sector = "Industrials",
+         Company = "UPS")
 
+JNJ <- read_csv("/Users/francosalinas/Desktop/COMP_STAT_112/DataScienceFinalProject/JNJ.csv")
+JNJ <- JNJ %>% 
+  select(-Open, -High, -Low, -`Adj Close`) %>% 
+  mutate(Sector = "Health care",
+         Company = "JNJ")
+UNH <- read_csv("/Users/francosalinas/Desktop/COMP_STAT_112/DataScienceFinalProject/UNH.csv")
+UNH <- UNH %>% 
+  select(-Open, -High, -Low, -`Adj Close`) %>% 
+  mutate(Sector = "Health care",
+         Company = "UNH")
+RHHBY<- read_csv("/Users/francosalinas/Desktop/COMP_STAT_112/DataScienceFinalProject/RHHBY.csv")
+RHHBY <- RHHBY %>% 
+  select(-Open, -High, -Low, -`Adj Close`) %>% 
+  mutate(Sector = "Health care",
+         Company = "RHHBY")
+MSFT<- read_csv("/Users/francosalinas/Desktop/COMP_STAT_112/DataScienceFinalProject/MSFT.csv")
+MSFT <- MSFT %>% 
+  select(-Open, -High, -Low, -`Adj Close`) %>% 
+  mutate(Sector = "Technology",
+         Company = "MSFT")
+NVDA<- read_csv("/Users/francosalinas/Desktop/COMP_STAT_112/DataScienceFinalProject/NVDA.csv")
+NVDA <- NVDA %>% 
+  select(-Open, -High, -Low, -`Adj Close`) %>% 
+  mutate(Sector = "Technology",
+         Company = "NVDA")
 
 ```
 
 ```{r}
+companies1 <- rbind(AAPL,MSFT,NVDA,HON)
+companies2 <- rbind(UNP,UPS,JNJ,UNH,RHHBY)
+companies2
+sp <- rbind(companies1,companies2)
+```
 
+
+```{r}
+tech <- rbind(AAPL,MSFT,NVDA)
+industrials <- rbind(HON,UNP,UPS)
+health <- rbind(JNJ,UNH,RHHBY)
+
+  
+```
+
+```{r, eval=FALSE}
+tech %>% 
+  ggplot(aes(y = Close, x = Date, color = Company)) +
+  geom_line()+
+  geom_text(aes(label = Company))+
+  labs(subtitle = "Date:{frame_along}")+
+  transition_reveal(Date)+
+  theme(legend.position = 0)
+```
+
+```{r, eval=FALSE}
+anim_save("tech.gif")
+```
+
+```{r}
+knitr::include_graphics("tech.gif")
+```
+
+
+```{r, eval = FALSE}
+health %>% 
+  ggplot(aes(y = Close, x = Date, color = Company)) +
+  geom_line()+
+  geom_text(aes(label = Company))+
+  labs(subtitle = "Date:{frame_along}")+
+  transition_reveal(Date)+
+  theme(legend.position = 0)
+```
+
+```{r, eval=FALSE}
+anim_save("health.gif")
+```
+
+```{r}
+knitr::include_graphics("health.gif")
+```
+
+```{r, eval = FALSE}
+industrials %>% 
+  ggplot(aes(y = Close, x = Date, color = Company)) +
+  geom_line()+
+  geom_text(aes(label = Company))+
+  labs(subtitle = "Date:{frame_along}")+
+  transition_reveal(Date)+
+  theme(legend.position = 0)
+```
+
+```{r, eval = FALSE}
+anim_save("industrials.gif")
+```
+
+```{r}
+knitr::include_graphics("industrials.gif")
+```
+
+```{r}
+sp_returns <- sp %>% 
+  group_by(Sector,Company) %>% 
+  mutate(return = (Close - lag(Close, 30))/lag(Close, 30)) 
+
+sp_returns %>% 
+  filter(Sector == "Technology") %>% 
+  ggplot(aes(x = Date, y = return, color = Company))+
+  geom_line()
+```
+
+```{r}
+sp_returns %>% 
+  filter(Sector == "Industrials") %>% 
+  ggplot(aes(x = Date, y = return, color = Company))+
+  geom_line()
+```
+
+```{r}
+sp_returns %>% 
+  filter(Sector == "Health care") %>% 
+  ggplot(aes(x = Date, y = return, color = Company))+
+  geom_line()
 ```
 
