@@ -154,6 +154,7 @@ sp_returns %>%
   geom_line()
 ```
 
+
 ```{r}
 sp_returns %>% 
   filter(Sector == "Industrials") %>% 
