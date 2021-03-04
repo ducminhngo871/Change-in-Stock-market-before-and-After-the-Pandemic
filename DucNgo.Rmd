@@ -399,4 +399,31 @@ sp %>%
   geom_line()
 ```
 
+```{r, fig.width= 10, fig.height= 4}
+return_type <- sp %>% 
+  filter(Sector!="All field") %>% 
+  select(-Close, -Volume) %>% 
+  group_by(Date, Sector) %>% 
+  mutate(avg_return = mean(return),
+         type_return = ifelse(avg_return<0, "negative", "positive"))%>% 
+  ungroup() %>% 
+  group_by(Sector) %>% 
+  mutate(`Proportion negative` = mean(type_return == "negative"),
+         `Proportion positive` = mean(type_return == "positive")) %>% 
+  pivot_longer(cols = `Proportion negative`:`Proportion positive`,
+               names_to = "prop_type",
+               values_to = "prop") %>% 
+  summarize(Sector, prop_type, prop) %>%
+  distinct(Sector, prop_type, prop)
 
+
+return_type %>% 
+  ggplot(aes(x = prop, y = prop_type, fill = prop_type )) + 
+  geom_col()+
+  facet_wrap(~Sector)+
+  labs(title = "Proportions of negative and positive returns in the last year across different industries",
+       fill = "Type of return",
+       x = "", 
+       y = "")
+  
+```
