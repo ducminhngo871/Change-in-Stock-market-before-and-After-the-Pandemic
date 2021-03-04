@@ -21,11 +21,6 @@ theme_set(theme_minimal())
 ```
 
 ```{r}
-SPY
-```
-
-
-```{r}
 AAPL <- read_csv("AAPL.csv")
 AAPL <- AAPL%>% 
   select(-Open, -High, -Low, -`Adj Close`) %>% 
@@ -200,6 +195,84 @@ SPY <- SPY %>%
   mutate(return = (Close - 324.87	)/ 324.87	 * 100) 
 ```
 
+
+```{r}
+XOM <- read_csv("XOM.csv")
+XOM <- XOM %>%
+  select(-Open, -High, -Low, -`Adj Close`) %>% 
+  mutate(Sector="Energy",
+         Company= "XOM") %>% 
+   mutate(return = (Close - 70.90)/ 70.90 * 100)
+
+CVX <- read_csv("CVX.csv")
+CVX <- CVX %>%
+  select(-Open, -High, -Low, -`Adj Close`) %>%
+  mutate(Sector="Energy",
+         Company= "CVX") %>%
+   mutate(return = (Close - 121.43)/ 121.43 * 100)
+
+RDS_A <-read_csv("RDS-A.csv")
+RDS_A <- RDS_A %>%
+  select(-Open, -High, -Low, -`Adj Close`) %>%
+  mutate(Sector="Energy",
+         Company= "RDS_A")%>%
+   mutate(return = (Close - 59.74)/ 59.74 * 100)
+
+energy <- rbind(XOM,CVX,RDS_A)
+```
+
+```{r}
+AMT <- read_csv("AMT.csv")
+AMT <- AMT %>%
+  select(-Open, -High, -Low, -`Adj Close`) %>%
+  mutate(Sector="Real Estate",
+         Company= "AMT")%>%
+  mutate(return = (Close - 228.50)/ 228.50 * 100)
+  
+
+KE <- read_csv("KE.csv")
+KE <- KE %>%
+  select(-Open, -High, -Low, -`Adj Close`) %>%
+  mutate(Sector="Real Estate",
+         Company= "KE")%>%
+  mutate(return = (Close - 17.690)/ 17.690 * 100)
+
+
+PLD <- read_csv("PLD.csv")
+PLD <- PLD %>%
+  select(-Open, -High, -Low, -`Adj Close`) %>%
+  mutate(Sector="Real Estate",
+         Company= "PLD")%>%
+  mutate(return = (Close - 88.40	)/ 88.40 * 100)
+
+real_estate <- rbind(AMT,KE,PLD)
+```
+
+```{r}
+BHP <-read_csv("BHP.csv")
+BHP <- BHP%>%
+  select(-Open, -High, -Low, -`Adj Close`) %>%
+  mutate(Sector="Material",
+         Company= "RDS_A") %>%
+   mutate(return = (Close - 54.92)/ 54.92 * 100)
+  
+LIN <-read_csv("LIN.csv")
+LIN <- LIN %>%
+  select(-Open, -High, -Low, -`Adj Close`) %>%
+  mutate(Sector="Material",
+         Company= "LIN") %>%
+ mutate(return = (Close - 210.74)/ 210.74 * 100)
+
+RIO <-read_csv("RIO.csv")
+RIO <- RIO %>%
+  select(-Open, -High, -Low, -`Adj Close`) %>%
+  mutate(Sector="Material",
+         Company= "RIO")%>%
+ mutate(return = (Close - 59.89)/ 59.89 * 100)
+
+material <- rbind(BHP,LIN,RIO)
+```
+
 ```{r}
 communication_services <- rbind(GOOGL, TCEHY, FB)
 utilities <- rbind(NEE, ENLAY, IBDSF)
@@ -216,7 +289,7 @@ health <- rbind(JNJ,UNH,RHHBY)
 
 ```{r}
 sp <- rbind(communication_services, utilities, financials, communication_discretionary, consumer_staple,
-            tech, industrials, health, SPY)
+            tech, industrials, health, real_estate, material, energy, SPY)
 ```
 
 
