@@ -420,10 +420,16 @@ return_type <- sp %>%
 return_type %>% 
   ggplot(aes(x = prop, y = prop_type, fill = prop_type )) + 
   geom_col()+
+  geom_text(aes(label = round(prop,digits = 2)), size = 3)+
   facet_wrap(~Sector)+
-  labs(title = "Proportions of negative and positive returns in the last year across different industries",
+  labs(title = "Proportions of negative and positive daily average returns per sector",
        fill = "Type of return",
        x = "", 
-       y = "")
+       y = "")+
+  theme(legend.position = 0,
+        panel.grid.major.y = element_blank(),
+        panel.grid.minor.y=element_blank())
   
 ```
+
+
