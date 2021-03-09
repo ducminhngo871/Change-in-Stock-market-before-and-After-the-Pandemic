@@ -1,24 +1,31 @@
 ---
 title: "R Notebook"
-output: html_notebook
+output:
+  html_document:
+    df_print: paged
+    code_folding: hide
 ---
-```{r}
+```{r warning=FALSE, include=FALSE}
 library(tidyverse)     # for data cleaning and plotting
 library(lubridate)     # for date manipulation
 library(openintro)     # for the abbr2state() function
 library(gplots)        # for col2hex() function
 library(RColorBrewer)  # for color palettes
 library(ggthemes)      # for more themes (including theme_map())
-library(plotly)        # for the ggplotly() - basic interactivity
+# library(plotly)        # for the ggplotly() - basic interactivity
 library(gganimate)     # for adding animation layers to ggplots
-library(transformr)    # for "tweening" (gganimate)
+# library(transformr)    # for "tweening" (gganimate)
 library(gifski)        # need the library for creating gifs but don't need to load each time
-library(shiny)         # for creating interactive apps
+# library(shiny)         # for creating interactive apps
 library(lubridate)     # for date manipulation
 library(ggthemes)      # for even more plotting themes
 library(janitor)  
 theme_set(theme_minimal())
 library(treemapify)
+```
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, error=TRUE, message=FALSE, warning=FALSE)
 ```
 
 ```{r}
@@ -178,7 +185,7 @@ BRKA <- BRKA %>%
   mutate(Sector = "Financials",
          Company = "BRKA") %>% 
   mutate(return = (Close - 342261)/ 342261 * 100) %>% 
-  mutate(shares = 1336348609 ) %>% 
+  mutate(shares = 1336348.609 ) %>% 
   mutate(market_cap = shares * Close)
   
 
@@ -395,10 +402,7 @@ sp <- rbind(communication_services, utilities, financials, communication_discret
 ## Vichy: Graph
 
 
-```{r Column Stack Graph}
-library(ggrepel)
-
-
+```{r Column Stack Graph, eval=FALSE}
 sp_column_stack_anim <- 
   sp %>% 
   # filter(Date== "2020-01-15") %>%
@@ -408,77 +412,83 @@ sp_column_stack_anim <-
             position = position_stack(vjust = 0.5),
             size = 2.2)+
   theme(legend.position = "none")+
-  scale_x_log10(breaks = scales::trans_breaks("log10", function(x) 10^x)
-                )+ 
+  scale_x_log10(
+   breaks = scales::trans_breaks("log10", function(x) 10^x),
+   labels = scales::trans_format("log10", scales::math_format(10^.x)))+ 
+  labs(title = "Stock Return by Sectors")+
   transition_time(Date) +
   ease_aes('linear')
 
 animate(sp_column_stack_anim, duration= 30, fps= 10)
+anim_save("sp_column_stack_anim.gif")
+
 ```
-The scale of each sector are different by the power of 10; therefore, the graph display an enormous part as Finance while the rest of the sectors as tiny part and can be barely seen. 
-```{r }
-sp %>% 
-  group_by(Sector) %>% 
-  summarise(cap = sum(market_cap))
+
+```{r}
+knitr::include_graphics("sp_column_stack_anim.gif")
 ```
 
 
-```{r Treemap Graph 1}
-p <- sp %>% 
+```{r Treemap Graph 2, eval=FALSE}
+sector_data <-
+  sp %>%
+  clean_names()  %>%
+  filter(sector != "All field") %>%
+  group_by(date, sector) %>%
+  summarise(market_cap = sum(market_cap)) %>%
+  mutate(percentage = 100*market_cap/sum(market_cap)) %>%
+  mutate(label = paste(sector, paste(round(percentage,2),"%"), sep="\n") )
+```
+
+
+
+```{r Treemap Graph 1, eval=FALSE}
+l <- "squarified"
+p2<- 
+  sector_data %>% 
+  ungroup() %>% 
+  # filter(date == "2020-01-10") %>%
+  ggplot( aes(area = percentage ,
+              fill = sector, 
+              label = label,
+              group= date)) +
+  geom_treemap(layout = l) +
+  geom_treemap_text(layout=l) +
+  labs(title = "Distribution of Market Cap in by Sector in {current_frame}")+
+  theme(legend.position = "none")     +
+  transition_manual(date)
+animate(p2, duration = 120)
+
+anim_save("sp_market_cap_treemap_by_sector_anim.gif")
+```
+
+
+```{r Treemap Graph 2, eval=FALSE}
+company_data <-
+  sp %>% 
   clean_names() %>% 
-  # filter(date == "2020-01-09") %>% 
-  ggplot( aes(area = market_cap ,
+  filter(sector != "All field") %>%
+  group_by(date, company) %>% 
+  summarise(market_cap = sum(market_cap)) %>%
+  mutate(percentage = 100*market_cap/sum(market_cap)) %>%
+  mutate(label = paste(company, paste(round(percentage,2),"%"), sep="\n") )
+  
+p3<- 
+  company_data %>% 
+  ungroup() %>% 
+  # filter(date == "2020-01-10") %>%
+  ggplot( aes(area = percentage ,
               fill = company, 
-              subgroup=sector, 
-              label = company)) +
-  geom_treemap(aes(alpha = shares)) +
-    geom_treemap_subgroup_border(colour="red") +
-    geom_treemap_text(fontface = "italic",
-                                        colour = "black",
-                                        place = "centre",
-                                        grow = F,
-                                        reflow=T) +
-    geom_treemap_subgroup_text(place = "centre",
-                                         grow = T,
-                               reflow=F,
-                                         min.size = 0) +
-  labs(title = "Distribution of Market Cap")+
-  theme(
-    legend.position = "none")+
-  transition_time(date) +
-  ease_aes('linear')
-animate(p, duration= 20, fps= 10, renderer = gifski_renderer())
+              label = label,
+              group= date)) +
+  geom_treemap() +
+  geom_treemap_text() +
+  labs(title = "Distribution of Market Cap by Company in {current_frame}")+
+  theme(legend.position = "none")     +
+  transition_manual(date)
+animate(p3, duration = 120)
 
-anim_save("sp_market_cap_treemap_anim.gif")
+anim_save("sp_market_cap_treemap_by_company_anim.gif")
 ```
-```{r Treemap Graph 2}
-p2 <- sp %>% 
-  clean_names() %>% 
-  filter(sector != "Financials") %>%
-  ggplot( aes(area = market_cap ,
-              fill = company, 
-              subgroup=sector, 
-              label = company)) +
-  geom_treemap(aes(alpha = shares)) +
-    geom_treemap_subgroup_border(colour="grey") +
-    geom_treemap_text(fontface = "italic",
-                                        colour = "black",
-                                        place = "centre",
-                                        grow = F,
-                                        reflow=T) +
-    geom_treemap_subgroup_text(place = "centre",
-                                         grow = T,
-                               reflow=F,
-                                         min.size = 0) +
-  labs(title = "Distribution of Market Cap")+
-  theme(
-    legend.position = "none")+
-  transition_time(date) +
-  ease_aes('linear')
-animate(p2, duration= 20, fps= 10, renderer = gifski_renderer())
-
-anim_save("sp_market_cap_treemap_anim_without_financials.gif")
-```
-
 
 
