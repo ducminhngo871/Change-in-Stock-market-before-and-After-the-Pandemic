@@ -333,7 +333,7 @@ return_type %>%
 
 
 
-```{r, eval = TRUE, fig.width=15}
+```{r, eval = TRUE, fig.width=15, fig.height=3.5}
 volume <- sp %>% 
   filter(Sector!="All field") %>% 
   select(-Close, -return) %>%
