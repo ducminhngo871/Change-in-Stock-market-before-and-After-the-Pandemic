@@ -461,4 +461,8 @@ A <- sp %>%
 anim_save("All_Line.gif")
 ```
 
+```{r, echo= FALSE}
+knitr::include_graphics("All_Line.gif")
+```
+
 
