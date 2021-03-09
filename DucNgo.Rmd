@@ -1,8 +1,11 @@
 ---
 title: "R Notebook"
+author: "Duc Ngo"
 output:
   html_document:
     df_print: paged
+    code_download: true
+    theme: cerulean
 ---
 ```{r}
 library(tidyverse)     # for data cleaning and plotting
@@ -295,112 +298,6 @@ sp <- rbind(communication_services, utilities, financials, communication_discret
 ```
 
 
-```{r, eval=FALSE}
-tech %>% 
-  ggplot(aes(y = Close, x = Date, color = Company)) +
-  geom_line()+
-  geom_text(aes(label = Company))+
-  labs(subtitle = "Date:{frame_along}")+
-  transition_reveal(Date)+
-  theme(legend.position = 0)
-```
-
-```{r, eval=FALSE}
-anim_save("tech.gif")
-```
-
-```{r}
-knitr::include_graphics("tech.gif")
-```
-
-
-```{r, eval = FALSE}
-health %>% 
-  ggplot(aes(y = Close, x = Date, color = Company)) +
-  geom_line()+
-  geom_text(aes(label = Company))+
-  labs(subtitle = "Date:{frame_along}")+
-  transition_reveal(Date)+
-  theme(legend.position = 0)
-```
-
-```{r, eval=FALSE}
-anim_save("health.gif")
-```
-
-```{r}
-knitr::include_graphics("health.gif")
-```
-
-```{r, eval = FALSE}
-industrials %>% 
-  ggplot(aes(y = Close, x = Date, color = Company)) +
-  geom_line()+
-  geom_text(aes(label = Company))+
-  labs(subtitle = "Date:{frame_along}")+
-  transition_reveal(Date)+
-  theme(legend.position = 0)
-```
-
-```{r, eval = FALSE}
-anim_save("industrials.gif")
-```
-
-```{r}
-knitr::include_graphics("industrials.gif")
-```
-
-```{r}
-sp %>% 
-  group_by(Sector,Company) %>% 
-  filter(Sector == "Technology") %>% 
-  ggplot(aes(x = Date, y = return, color = Company))+
-  geom_line()
-```
-
-
-```{r}
-sp %>% 
-  filter(Sector == "Industrials") %>% 
-  ggplot(aes(x = Date, y = return, color = Company))+
-  geom_line()
-```
-
-```{r}
-sp %>% 
-  filter(Sector == "Health care") %>% 
-  ggplot(aes(x = Date, y = return, color = Company))+
-  geom_line()
-```
-
-```{r}
-sp %>% 
-  filter(Sector == "Communication Services") %>% 
-  ggplot(aes(x = Date, y = return, color = Company))+
-  geom_line()
-```
-
-```{r}
-sp %>% 
-  filter(Sector == "Utilities") %>% 
-  ggplot(aes(x = Date, y = return, color = Company))+
-  geom_line()
-```
-
-```{r}
-sp %>% 
-  filter(Sector == "Financials") %>% 
-  ggplot(aes(x = Date, y = return, color = Company))+
-  geom_line()
-```
-
-```{r}
-sp %>% 
-  filter(Sector == "All field") %>% 
-  ggplot(aes(x = Date, y = return, color = Company))+
-  geom_line()
-```
-
 ```{r, fig.width= 10, fig.height= 4}
 return_type <- sp %>% 
   filter(Sector!="All field") %>% 
@@ -543,5 +440,25 @@ anim_save("moving_return_company.gif")
 knitr::include_graphics("moving_return_company.gif")
 ```
 
+
+```{r}
+A <- sp %>%
+  group_by(Sector,Date)%>%
+  summarise(return=mean(return))%>%
+  ggplot(aes(y=return,x=Date, color=Sector))+
+  geom_line()+
+  labs(y="",
+       x="",
+       subtitle = "Date: {frame_along}",
+       title = "Changing Rate of Return for Different Sectors")+
+  facet_wrap(~Sector,scales="free_y")+
+  scale_x_date(date_labels = "%y-%m")+
+  theme(legend.position = 0,axis.text.x = element_text(size = 8))+
+  transition_reveal(Date)
+  animate(A,width=600,height=400)
+
+
+anim_save("All_Line.gif")
+```
 
 
