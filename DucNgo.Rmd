@@ -465,6 +465,83 @@ ggplotly(volume,
          
 ```
 
+Duc's Graph: 
+
+## By sector: 
+```{r, eval=FALSE}
+moving_return_sector <- drop_na(sp) %>% 
+  group_by(Date, Sector) %>% 
+  summarise(return = mean(return) / 100) %>% 
+  ungroup() %>% 
+  group_by(Date) %>% 
+  #summarise(daily_return = sum(return)) %>% 
+  #mutate(total_return_period = cumsum(daily_return)) %>% 
+  top_n(n = 10, wt = return) %>%  
+  arrange(Date, return) %>% 
+  mutate(rank = 1: n()) %>% 
+  ggplot(aes(y = factor(rank), x = return,
+             fill = return)) + 
+  geom_col() + 
+  geom_text(aes(label = Sector),
+            color = "black", hjust = "left", x = 0) +
+  labs(title = "Change in rate of return in different sectors",
+       subtitle = "Date: {frame_time}",
+       x = "",
+       y = "") +
+  theme(axis.line = element_blank(),
+        panel.grid = element_blank(),
+        axis.text.y = element_blank(),
+        legend.position = "none")  +
+  scale_fill_viridis_c() + 
+  transition_time(Date) 
+```
+
+
+```{r}
+animate(moving_return_sector, nframes = 200, duration = 45)
+anim_save("moving_return_sector.gif")
+```
+
+```{r, echo= FALSE}
+knitr::include_graphics("moving_return_sector.gif")
+```
+
+## Companies: 
+```{r, eval=FALSE}
+moving_return_company <- drop_na(sp) %>% 
+  group_by(Date, Company) %>% 
+  select(-Volume, -Sector) %>% 
+  ungroup() %>% 
+  group_by(Date) %>% 
+  mutate(return = return / 100) %>% 
+  top_n(n = 10, wt = return) %>%  
+  arrange(Date, return) %>% 
+  mutate(rank = 1: n()) %>% 
+  ggplot(aes(y = factor(rank), x = return,
+             fill = return)) + 
+  geom_col() + 
+  geom_text(aes(label = Company),
+            color = "black", hjust = "left", x = 0) +
+  labs(title = "Rate of return changes in companies",
+       subtitle = "Date: {frame_time}",
+       x = "",
+       y = "") +
+  theme(axis.line = element_blank(),
+        panel.grid = element_blank(),
+        axis.text.y = element_blank(),
+        legend.position = "none")  +
+  scale_fill_viridis_c() + 
+  transition_time(Date) 
+```
+
+```{r}
+animate(moving_return_company, nframes = 200, duration = 45)
+anim_save("moving_return_company.gif")
+```
+
+```{r, echo= FALSE}
+knitr::include_graphics("moving_return_company.gif")
+```
 
 
 
