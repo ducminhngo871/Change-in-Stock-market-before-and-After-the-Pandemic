@@ -367,13 +367,19 @@ ggplotly(volume,
 ```{r}
 real_estate %>% 
   ggplot(aes(x = Date, y = return, color = Company)) +
-  geom_line()
+  geom_line()+
+  labs(title = "Real Estate biggest companies' returns over the past year",
+       y = "Return", 
+       x = "")
 ```
 
 ```{r}
 tech %>% 
   ggplot(aes(x = Date, y = return, color = Company)) +
-  geom_line()
+  geom_line()+
+  labs(title = "Technology biggest companies' returns over the past year",
+       y = "Return", 
+       x = "")
 ```
 
 >The bar graph shows the sum of the monthly transactions for the three biggest companies in each sector. We can see that the sector with the highest volume is Technology, and the sector witht he lowest volume is the Real State sector. The high volumes in the Technology sector potentially reflect that investors preffered large technology companies over the pandemic. 
