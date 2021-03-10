@@ -332,7 +332,8 @@ return_type %>%
   
 ```
 
->This graph compares the proportion of time in which the average of the cumulative return of the best stocks per sector have been over or under the base price. We used daily observations. We found the daily cumulative return relative to the first closing price. Then we averaged the daily cumulative return across sectors. The graph distinguishes between sectors, showing that Communication Discretionary was the sector with the highest proportion of positive returns relative to the negative returns. This meaning, that 97% of the time the Communication Discretionary secto had positive returns relative to the initial price. Had a person bought shares of the companies in this sector in January 2nd, they would have slept peacefully 97% of the time. On the other hand, the Energy sector was the sector with the highest proportion of negative returns relative to positive returns. There are multiple reasons for the high positive returns in the technology sector, including the fact that Apple released a new Iphone model in October, the strong predictions for earnings and sales and the reported statistics exceeding analysts expectations previously for the three companies the year before. This proves the point that positive returns on Technology were the main driver for positive returns in the market indexes. 
+>This graph compares the proportion of time in which the average of the cumulative return of the best stocks per sector have been over or under the base price. We used daily observations. We found the daily cumulative return relative to the first closing price. Then we averaged the daily cumulative return across sectors. The graph distinguishes between sectors, showing that Communication Discretionary was the sector with the highest proportion of positive returns relative to the negative returns. This meaning, that 97% of the time the Communication Discretionary secto had positive returns relative to the initial price. Had a person bought shares of the companies in this sector in January 2nd, they would have slept peacefully 97% of the time. On the other hand, the Energy sector was the sector with the highest proportion of negative returns relative to positive returns. The pandemic affected different sectors in a different way. The least affected sectors are Communication Discretionary and Technology, one of the reasons is that their consumption doesn't require in person presence. In the case of energy, given a drop in the demand of petroleum given the lock down in different countries affected their prices, given that oil companies revenue depends on price made the investors sell their shares on the oil industry. Financials was also drastically affected, as the FED lowered the interest rates and there were negative interest rates in Europe, understanding that banks are the suppliers of capital, lower (or negative) interest rates affect banks' revenue. 
+
 
 
 ```{r, eval = TRUE, fig.width=15, fig.height=3.5}
@@ -365,20 +366,21 @@ ggplotly(volume,
 ```
 ```{r}
 real_estate %>% 
-  ggplot(aes(x = Date, y = Close, color = Company)) +
+  ggplot(aes(x = Date, y = return, color = Company)) +
   geom_line()
 ```
 
 ```{r}
 tech %>% 
-  ggplot(aes(x = Date, y = Close, color = Company)) +
+  ggplot(aes(x = Date, y = return, color = Company)) +
   geom_line()
 ```
 
->The bar graph shows the sum of the daily transactions for the three biggest companies in each sector. We can see that the sector with the highest volume is Technology, and the sector witht he lowest volume is the Real State sector. The high volumes in the Technology sector potentially reflect that investors preffered large technology companies over the pandemic. 
-This companies have large market caps, and given that the 5 largest companies in the Technology sector account for 17.5% of the S&P, these "blue chip" companies are expected to have larger volumes. One of the reasons is their liquidity. They are very liquid because many people are trading them;therefore, you can find buyers and sellers quickly. As a result there are not price distortions as a consequence of delays in transactions. 
+>The bar graph shows the sum of the monthly transactions for the three biggest companies in each sector. We can see that the sector with the highest volume is Technology, and the sector witht he lowest volume is the Real State sector. The high volumes in the Technology sector potentially reflect that investors preffered large technology companies over the pandemic. 
+This companies have large market caps, and given that the 5 largest companies in the Technology sector account for 17.5% of the S&P, these "blue chip" companies are expected to have larger volumes. One of the reasons is their liquidity. They are very liquid because many people are trading them; therefore, you can find buyers and sellers quickly. As a result there are not price distortions as a consequence of delays in transactions. 
 On the other hand, this could be just a continuation of past trends, given that the technology sector has been the most popular in the last years. 
 Another potential explanation is that Technology stocks are always more risky given the larger returns; therefore, there are major price swings that cause people to increase their transactions. 
-Also, larger volumes reflect the strenght of price changes during the pandemic. In the case of Real State, low volumes reflect the lack of strenght in price changes. As we can see in the graph for Real State companies, the trend is flat, proving that there weren't significant changes in price. Therefore,there weren't changes in the demand or supply of Real State stock.  
+Also, larger volumes reflect the strenght of price changes during the pandemic. In the case of Real State, low volumes reflect the lack of strenght in price changes, reflected on changes in the cumulative returned graphed. As we can see in the graph for Real State companies, the trend is flatter, proving that there weren't significant changes in price. Therefore,there weren't many changes in the demand or supply of Real State stock.  
 We can also observe that in periods with low prices, the volume tends to increase. In this case, it was in March given the declaration of sanitary emergency and the first COVID-19 cases in the country. 
+
 
