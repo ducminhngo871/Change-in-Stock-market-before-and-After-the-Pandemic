@@ -4,6 +4,8 @@ author: "Duc Ngo, Vichearith Meas, Franco Salinas, Max Wang"
 output:
   html_document:
     df_print: paged
+    toc: TRUE
+    toc_float: TRUE
     code_download: true
     code_folding: hide
     theme: journal
