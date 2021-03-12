@@ -8,6 +8,11 @@ output:
     code_folding: hide
     theme: journal
 ---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, error=FALSE, message=FALSE, warning=FALSE)
+```
+
 ```{r}
 library(tidyverse)     # for data cleaning and plotting
 library(lubridate)     # for date manipulation
@@ -27,9 +32,6 @@ library(treemapify)
 theme_set(theme_minimal())
 ```
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, error=TRUE, message=FALSE, warning=FALSE)
-```
 
 ```{r, echo=FALSE}
 ##: Here is the information about every company that we are doing
@@ -423,7 +425,7 @@ After we have found the way to conduct research with our data, we have created t
 ##  The performance of companies and the sectors: 
 
 ### Return by sectors: 
-```{r}
+```{r, eval = FALSE}
 A <- sp %>%
   group_by(Sector,Date)%>%
   summarise(return=mean(return))%>%
@@ -438,7 +440,6 @@ A <- sp %>%
   theme(legend.position = 0,axis.text.x = element_text(size = 8))+
   transition_reveal(Date)
   animate(A,width=600,height=400)
-
 
 anim_save("All_Line.gif")
 ```
@@ -473,13 +474,12 @@ moving_return_sector <- drop_na(sp) %>%
         legend.position = "none")  +
   scale_fill_viridis_c() + 
   transition_time(Date) 
-```
 
-
-```{r}
 animate(moving_return_sector, nframes = 200, duration = 45)
 anim_save("moving_return_sector.gif")
 ```
+
+
 
 ```{r, echo= FALSE}
 knitr::include_graphics("moving_return_sector.gif")
@@ -489,7 +489,7 @@ Overall, it seems that the return for the Communication Discretionary is consist
     The situation for the Energy and Financials sectors is the worst. Since the first day, Energy's cumulative return is negative. Only the last month is positive for the Financials sector. Health Care, Industrials, Material, Real Estate, and Utilities followed a similar trend, but these sectors' conditions are better than that of Energy and Financials. Health Care, Industrials, Material, Real Estate, and Utilities have similar trends compared to the overall market.
     In general, the return sharply dropped from 2020-1-1 to April 2020 and then rebounded at a  lower rate, back to 0 in August 2020. After, it oscillated up and down until 2020 November and then continuously increased slowly. So far, return as a whole is 20%.
     
-    ```{r, fig.width= 10, fig.height= 4}
+```{r, fig.width= 10, fig.height= 4}
 return_type <- sp %>% 
   filter(Sector!="All field") %>% 
   select(-Close, -Volume) %>% 
@@ -551,9 +551,6 @@ moving_return_company <- drop_na(sp) %>%
         legend.position = "none")  +
   scale_fill_viridis_c() + 
   transition_time(Date) 
-```
-
-```{r}
 animate(moving_return_company, nframes = 200, duration = 45)
 anim_save("moving_return_company.gif")
 ```
@@ -636,11 +633,11 @@ animate(p3, duration = 120)
 anim_save("sp_market_cap_treemap_by_company_anim.gif")
 ```
 
-```{r}
+```{r, echo = FALSE}
 knitr::include_graphics("sp_market_cap_treemap_by_company_anim.gif")
 ```
 
-The distribution of market cap by company graph shows the top 20 companies that have the greatest amount of market cap proportion. Alibaba (BABA), Apple (AAPL), Amazon (AMZN), and Microsoft (MSFT) are the top four companies that are from the top two sectors: Communication Discretionary and Technology. From this we can see how the two sectors are the dominant by looking which companies have the greatest market cap. 
+The distribution of market cap by company graph shows the top 20 companies that have the greatest amount of market cap proportion. Apple (AAPL), Amazon (AMZN), and Microsoft (MSFT) are the top three companies that are from the top two sectors: Communication Discretionary and Technology. From this we can see how the two sectors are the dominant by looking which companies have the greatest market cap. 
 
 ## The change in trading volume for each sector.
 
